@@ -1,8 +1,11 @@
-all:				Main.class
+all:				App.class
 
 
-Main.class:     Main.java
-				@javac Main.java
+App.class:     App.java
+				@javac App.java
 
 clean:
 				@rm -rf *.class *~
+
+run:     
+				@rm -rf *.class *~ && make && java App
