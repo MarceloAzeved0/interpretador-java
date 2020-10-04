@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 
@@ -8,54 +11,74 @@ public class App {
     private static byte[] memory = new byte[1000];
     private static ArrayList<Character> source = new ArrayList<>();
     private static ArrayList<Integer> ife = new ArrayList<>();
-    private static int data_pointer = 0;// memoria
+    private static ArrayList<Byte> of = new ArrayList<>();
+    private static int data_pointer = 0; // memoria
     private static int program_counter = 0;// source
-    private static final char[] op = {'<', '>', '[', ']', '$', '+', '-', '.', ','};
+    private static ArrayDeque<Integer> stack = new ArrayDeque<>();
     public static void main(String[] args) {
       try {
         readFile(source, ife);
-        //while(caractere != '$')
-        for(var caractere : source) {
-          switch(caractere) {
+        
+        while(program_counter != source.size()) {
+          switch(source.get(program_counter)) {
             case '<':
               data_pointer--;
+              program_counter++;
               break;
             case '>':
               data_pointer++;
+              program_counter++;
               break;
             case '[':
+              if (memory[data_pointer] == 0) {
+                  program_counter = stack.pop() + 1;
+              } else {
+                stack.push(program_counter);
+                program_counter++;
+              }
               break;
             case ']':
+              if (memory[data_pointer] != 0) {
+                program_counter = stack.pop();
+                stack.push(program_counter);
+              } else {
+                program_counter++;
+              }
               break;
             case '$':
+              escreve_no_of(of);
+              program_counter++;
               break;
             case '+':
               memory[data_pointer]++;
+              program_counter++;
               break;
             case '-':
               memory[data_pointer]--;
+              program_counter++;
               break;
             case ',':
               memory[data_pointer] = ife.remove(0).byteValue();
+              program_counter++;
               break;
             case '.':
-              escreve_no_of(memory[data_pointer]);
+              of.add(memory[data_pointer]);
+              program_counter++;
               break;
             default:
+              program_counter++;
               break;
           }
         }
       } catch (IOException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
-        
       }
      
     }
 
     public static void readFile(ArrayList<Character> source, ArrayList<Integer> ife) throws IOException {
-      final String source_path = "/home/marcelo/Documents/interpretador/SOURCE";
-      final String if_path = "/home/marcelo/Documents/interpretador/IF";
+      final String source_path = "./SOURCE";
+      final String if_path = "./IF";
       try {
         
         //read source
@@ -86,7 +109,13 @@ public class App {
       
     }
 
-    public static void escreve_no_of(byte a) {
-
+    public static void escreve_no_of(final ArrayList<Byte> of) {
+      try (var bw = new BufferedWriter(new FileWriter("./OF"))) {
+        for (Byte c : of) {
+          bw.write((int) c);  
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
