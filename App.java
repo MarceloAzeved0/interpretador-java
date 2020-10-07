@@ -6,6 +6,15 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+/**
+ * OBS.: Necessário Java 11
+ * Grupo 7
+ * Autores: 
+ * Jessica Rodrigues Freua;
+ * Jonatas Van Groll Lemos; 
+ * Kevin Boucinha Fiorentin;
+ * Marcelo Bernardy de Azevedo.
+ */
 
 public class App {
     private static byte[] memory = new byte[1000];
